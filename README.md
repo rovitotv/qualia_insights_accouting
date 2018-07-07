@@ -5,10 +5,10 @@ years I have used this simple Python script.  We bank with PNC so
 it imports the CSV files and puts categories on everything.  The
 system is not perfect so feel free to modify for your needs.
 
-QIA is based on Python it runs on Raspberry Pi, Chromebook (using crouton),
-iPad (using Pythonista), and MacOS (using Anaconda).  It is meant to be run
-from the iPython prompt interactively. All the modules used are well known
-and easy to install. The list of Python dependencies are:
+QIA is based on Python it runs on Raspberry Pi, Chromebook (using crouton with
+Anaconda), iPad (using Pythonista), and MacOS (using Anaconda).  It is meant
+to be run from the iPython prompt interactively. All the modules used are well
+known and easy to install. The list of Python dependencies are:
 * matplotlib
 * numpy
 * Python Standard Library modules: CSV, datetime, os
