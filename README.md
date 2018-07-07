@@ -5,8 +5,13 @@ years I have used this simple Python script.  We bank with PNC so
 it imports the CSV files and puts categories on everything.  The
 system is not perfect so feel free to modify for your needs.
 
-QIA is based on Python running on the Raspberry PI.  It is meant
-to be run from the iPython prompt interactively.
+QIA is based on Python it runs on Raspberry Pi, Chromebook (using crouton),
+iPad (using Pythonista), and MacOS (using Anaconda).  It is meant to be run
+from the iPython prompt interactively. All the modules used are well known
+and easy to install. The list of Python dependencies are:
+* matplotlib
+* numpy
+* Python Standard Library modules: CSV, datetime, os
 
 # General Steps
 
@@ -37,9 +42,9 @@ categories = read_categories("/home/pi/qualia_insights_accounting/data/categorie
 
 1. Generate yearly reports print out in html
 
-1.5 Save graphs as images then place into reports
+2. Save graphs as images then place into reports
 
-2. Make a different in transactions for personal and business.  For example
+3. Make a different in transactions for personal and business.  For example
 we might have an expense that is paid with personal.  I am thinking have
 different names for the data files.
 
