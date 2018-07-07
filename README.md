@@ -1,8 +1,12 @@
 Qualia Insights Accounting System...why buy when you can write
-your own system?
+your own system? My lovely Wife owns and operates a mental health
+counselling business and I do her accounting.  For the last several
+years I have used this simple Python script.  We bank with PNC so
+it imports the CSV files and puts categories on everything.  The
+system is not perfect so feel free to modify for your needs.
 
 QIA is based on Python running on the Raspberry PI.  It is meant
-to be run from the iPython prompt interactively.  
+to be run from the iPython prompt interactively.
 
 # General Steps
 
@@ -38,10 +42,4 @@ categories = read_categories("/home/pi/qualia_insights_accounting/data/categorie
 2. Make a different in transactions for personal and business.  For example
 we might have an expense that is paid with personal.  I am thinking have
 different names for the data files.
-
-Test this change to see if it goes back to Pi and Mac! How do I get this changes staged?
-
-ok this change is from working copy on iPad, which I am not sure if I need this app since
-I can use stash?
-
 

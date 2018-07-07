@@ -1,9 +1,35 @@
 '''
     Qualia Insights Accouting System V0.1
-    
+
     By: Todd V. Rovito rovitotv@gmail.com
-    
-    Seems to work with Python 3!  
+
+    Seems to work with Python 3!
+
+Copyright (c) 2018, Todd V. Rovito and Linda L. Rovito
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 '''
 import csv
 import matplotlib.pyplot as plt
@@ -92,7 +118,7 @@ def assign_categories(bank_data, categories):
                 category = categories[c][1]
                 break
         bank_categories.append(category)
-            
+
 
     return bank_categories
 
@@ -109,7 +135,7 @@ def print_unknown(bank_data, bank_categories):
                 bank_data[i]['description_1']))
             unknown_count += 1
     print("unknown count/total: %d/%d" % (unknown_count, len(bank_data)))
-    
+
 def print_category_total(bank_data, bank_categories, month_start, month_end, make_plot = False):
 		'''
 			This function pretty prints the category totals by month and category.
@@ -124,7 +150,7 @@ def print_category_total(bank_data, bank_categories, month_start, month_end, mak
 							category_total[bank_categories[bank_index]] = category_total[bank_categories[bank_index]] + bank_data[bank_index]['amount']
 						else:
 							category_total[bank_categories[bank_index]] = bank_data[bank_index]['amount']
-												
+
 		# now that we have gathered the data lets pretty print the results
 		print("month start: %d month end: %d" % (month_start, month_end))
 		print("{0:20} {1:10}".format("category", "total"))
@@ -133,9 +159,9 @@ def print_category_total(bank_data, bank_categories, month_start, month_end, mak
 			#print("{0:20} {1:10f}".format(category_key, category_total[category_key]))
 			print("{0:20}  ${1:,.2f}".format(category_key, category_total[category_key]))
 			profit += category_total[category_key]
-		
+
 		print("{0:20} ${1:,.2f}".format("profit:", profit))
-		
+
 		# create a plot if enabled
 		if make_plot:
 			category_list = list(category_total.values())
@@ -151,14 +177,14 @@ def print_category_total(bank_data, bank_categories, month_start, month_end, mak
 			ax.set_xticklabels(category_name, rotation=90)
 			plt.tight_layout()
 			plt.show()
-			
+
 def html_categories_for_year(bank_data, bank_categories, html_directory):
 	'''
 		This function will create a html file of the categories by each month.
 		html syntax for a table that is ugly
     <tr>
     <th>Firstname</th>
-    <th>Lastname</th> 
+    <th>Lastname</th>
     <th>Age</th>
   </tr>
 	'''
@@ -176,10 +202,10 @@ table, th, td {
 
 <table style="width:100%">
 	'''
-	
+
 	html_footer = '''
 </body>
-</html>	
+</html>
 	'''
 	# go through the bank_data make html_detail files and adding up category totals
 	html_file_name = html_directory + "/qia_categories_summary_table.html"
@@ -195,12 +221,12 @@ table, th, td {
 				html_detail_file_name = html_directory + "/" + bank_categories[bank_index] + ".html"
 				with open(html_detail_file_name, 'a') as html_detail_file:
 					html += "<tr>"
-					html += "<td>%s</td><td>%06.2f</td><td>%s</td><td>%s</td><td>%s</td>" % (bank_data[bank_index]['date'], 
+					html += "<td>%s</td><td>%06.2f</td><td>%s</td><td>%s</td><td>%s</td>" % (bank_data[bank_index]['date'],
 						bank_data[bank_index]['amount'], bank_data[bank_index]['description_1'], bank_data[bank_index]['description_2'],
 						bank_data[bank_index]['type'])
 					html += "</tr>\n"
 					html_detail_file.write(html)
-					html = ""				
+					html = ""
 			else:
 				# new category so we have to create a record in the data dictionary
 				# also need to create a new file because we have not seen it before
@@ -213,7 +239,7 @@ table, th, td {
 					html += "<td><b>Date</b></td><td><b>Amount</b></td><td><b>Description_1</b></td><td><b>Description_2</b></td><td><b>Type</b></td>"
 					html += "</tr>\n"
 					html += "<tr>"
-					html += "<td>%s</td><td>%06.2f</td><td>%s</td><td>%s</td><td>%s</td>" % (bank_data[bank_index]['date'], 
+					html += "<td>%s</td><td>%06.2f</td><td>%s</td><td>%s</td><td>%s</td>" % (bank_data[bank_index]['date'],
 						bank_data[bank_index]['amount'], bank_data[bank_index]['description_1'], bank_data[bank_index]['description_2'],
 						bank_data[bank_index]['type'])
 					html += "</tr>\n"
@@ -223,10 +249,10 @@ table, th, td {
 		# sort the dictionary category_total and place into a list
 		# https://stackoverflow.com/questions/20577840/python-dictionary-sorting-in-descending-order-based-on-values
 		category_total_sorted_keys = sorted(category_total, key=category_total.get, reverse=True)
-							
+
 		# now we have to go through each of the categories and write a total line
 		# close the table and the html_footer for the html_detail files
-		for category_key in category_total_sorted_keys: 
+		for category_key in category_total_sorted_keys:
 			html_detail_file_name = html_directory + "/" + category_key + ".html"
 			with open(html_detail_file_name, 'a') as html_detail_file:
 				# make a total line
@@ -238,7 +264,7 @@ table, th, td {
 				html += "</p>\n"
 				html_detail_file.write(html)
 				html_detail_file.write(html_footer)
-									
+
 		# now that we have gathered the data lets pretty print the results in a summary table
 		# include a link to the detail file in the summary table
 		# <a href="url">link text</a>
@@ -247,7 +273,7 @@ table, th, td {
 		html += "<p>"
 		html += "<tr>"
 		html += "<td><b>Category</b></td><td><b>Amount</b></td>"
-		html += "</tr>\n"		
+		html += "</tr>\n"
 		for category_key in category_total_sorted_keys:
 			html += "<tr>"
 			html += ("<td><a href='./%s.html'>" % category_key)
@@ -255,15 +281,15 @@ table, th, td {
 			html += "</tr>\n"
 			#print("{0:20}  ${1:,.2f}".format(category_key, category_total[category_key]))
 			profit += category_total[category_key]
-		
+
 		# make a profit line
 		html += "<tr>"
 		html += ("<td><b>Profit</b></td><td><b>$%6.2f</b></td>" % profit)
 		html += "</tr>\n"
 		html += "</table>\n"
 		html += "</p>\n"
-		html_file.write(html)		
-		
+		html_file.write(html)
+
 		# make a graph and save to a file
 		#category_list = list(category_total.values())
 		#category_name = list(category_total.keys())
@@ -283,16 +309,16 @@ table, th, td {
 		ax.set_xticklabels(category_name, rotation=90)
 		plt.tight_layout()
 		plt.savefig(html_directory + "/category_plot.png")
-		
+
 		#html = "<p><img src='category_plot.png' alt='category plot' width='500' height='377'></p>\n"
 		html = "<p><img src='category_plot.png' alt='category plot' width=800 height=400></p>\n"
 		html_file.write(html)
 		html_file.write(html_footer)
-    
+
 if __name__ == "__main__":
 		print("Welcome to QI Accounting System verion 0.1 by Todd V. Rovito rovitotv@gmail.com")
 		# each year we have to change the year as needed now we are working on 2017
-		
+
 		# for Pythonista
 		# to get directory below you have to go into stash and do "echo $HOME"
 		# maybe the path_to_data variable should be a command line argument? Then
@@ -303,5 +329,5 @@ if __name__ == "__main__":
 		bank_data_categories = assign_categories(bank_data, categories)
 		print_unknown(bank_data, bank_data_categories)
 		print_category_total(bank_data, bank_data_categories, 1, 12, True)
-		html_categories_for_year(bank_data, bank_data_categories, 
+		html_categories_for_year(bank_data, bank_data_categories,
 			"/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/temp/")
