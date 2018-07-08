@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 import csv
+import matplotlib # this code imports matplotlib without OpenGL
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import date
@@ -316,18 +318,20 @@ table, th, td {
 		html_file.write(html_footer)
 
 if __name__ == "__main__":
-		print("Welcome to QI Accounting System verion 0.1 by Todd V. Rovito rovitotv@gmail.com")
-		# each year we have to change the year as needed now we are working on 2017
+    print("Welcome to QI Accounting System verion 0.1 by Todd V. Rovito rovitotv@gmail.com")
+    # each year we have to change the year as needed now we are working on 2017
 
-		# for Pythonista
-		# to get directory below you have to go into stash and do "echo $HOME"
-		# maybe the path_to_data variable should be a command line argument? Then
-		# program would work in Pythonista if called from command line and Raspberry Pi?
-		path_to_data = '/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/QIA/data/'
-		bank_data = load_csv_data(path_to_data + "2017/")
-		categories = read_categories(path_to_data + "categories.csv")
-		bank_data_categories = assign_categories(bank_data, categories)
-		print_unknown(bank_data, bank_data_categories)
-		print_category_total(bank_data, bank_data_categories, 1, 12, True)
-		html_categories_for_year(bank_data, bank_data_categories,
-			"/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/temp/")
+    # for Pythonista
+    # to get directory below you have to go into stash and do "echo $HOME"
+    # maybe the path_to_data variable should be a command line argument? Then
+    # program would work in Pythonista if called from command line and Raspberry Pi?
+    platform_pythonista = False # set this variable to true if running on pythonista
+    if platform_pythonista:
+        path_to_data = '/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/QIA/data/'
+        bank_data = load_csv_data(path_to_data + "2017/")
+        categories = read_categories(path_to_data + "categories.csv")
+        bank_data_categories = assign_categories(bank_data, categories)
+        print_unknown(bank_data, bank_data_categories)
+        print_category_total(bank_data, bank_data_categories, 1, 12, True)
+        html_categories_for_year(bank_data, bank_data_categories,
+            "/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/temp/")
