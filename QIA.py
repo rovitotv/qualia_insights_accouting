@@ -192,47 +192,49 @@ def print_bank_data(bank_data, bank_categories, month, year):
                 bank_categories[i],
                 bank_data[i]['description_1']))
 
-def print_category_total(bank_data, bank_categories, month_start, month_end, make_plot = False):
-		'''
-			This function pretty prints the category totals by month and category.
-		'''
-		# gather all the data and put everything into a dictionary
-		category_total = {}
-		for bank_index in range(0, len(bank_data)):
-				if bank_data[bank_index]['date'].month >= month_start:
-					if bank_data[bank_index]['date'].month <= month_end:
-						# month range is correct now see if category exists as a dict key
-						if bank_categories[bank_index] in category_total.keys():
-							category_total[bank_categories[bank_index]] = category_total[bank_categories[bank_index]] + bank_data[bank_index]['amount']
-						else:
-							category_total[bank_categories[bank_index]] = bank_data[bank_index]['amount']
+def print_category_total(bank_data, bank_categories, year, month_start, month_end, make_plot = False):
+        '''
+            This function pretty prints the category totals by year, month and category.
+        '''
+        # gather all the data and put everything into a dictionary
+        category_total = {}
+        for bank_index in range(0, len(bank_data)):
+            if bank_data[bank_index]['date'].year == year:
+                if bank_data[bank_index]['date'].month >= month_start:
+                    if bank_data[bank_index]['date'].month <= month_end:
+                        # month range is correct now see if category exists as a dict key
+                        if bank_categories[bank_index] in category_total.keys():
+                            category_total[bank_categories[bank_index]] = category_total[bank_categories[bank_index]] + bank_data[bank_index]['amount']
+                        else:
+                            category_total[bank_categories[bank_index]] = bank_data[bank_index]['amount']
 
 		# now that we have gathered the data lets pretty print the results
-		print("month start: %d month end: %d" % (month_start, month_end))
-		print("{0:20} {1:10}".format("category", "total"))
-		profit = 0
-		for category_key in category_total:
-			#print("{0:20} {1:10f}".format(category_key, category_total[category_key]))
-			print("{0:20}  ${1:,.2f}".format(category_key, category_total[category_key]))
-			profit += category_total[category_key]
+        print("year: %d month start: %d month end: %d" % (year, month_start, month_end))
+        print("{0:20} {1:10}".format("category", "total"))
+        profit = 0
+        #for category_key in category_total:
+        for category_key in sorted(category_total):
+            #print("{0:20} {1:10f}".format(category_key, category_total[category_key]))
+            print("{0:20}  ${1:,.2f}".format(category_key, category_total[category_key]))
+            profit += category_total[category_key]
 
-		print("{0:20} ${1:,.2f}".format("profit:", profit))
+        print("{0:20} ${1:,.2f}".format("profit:", profit))
 
-		# create a plot if enabled
-		if make_plot:
-			category_list = list(category_total.values())
-			category_name = list(category_total.keys())
-			fix, ax = plt.subplots()
-			width = 0.35
-			N = len(category_list)
-			ind = np.arange(N)
-			rects1 = ax.bar(ind, category_list, width, color='y')
-			ax.set_ylabel('Amount')
-			ax.set_title('Category Amount from Month %d to %d' % (month_start, month_end))
-			ax.set_xticks(ind + (width/2))
-			ax.set_xticklabels(category_name, rotation=90)
-			plt.tight_layout()
-			plt.show()
+        # create a plot if enabled
+        if make_plot:
+            category_list = list(category_total.values())
+            category_name = list(category_total.keys())
+            fix, ax = plt.subplots()
+            width = 0.35
+            N = len(category_list)
+            ind = np.arange(N)
+            rects1 = ax.bar(ind, category_list, width, color='y')
+            ax.set_ylabel('Amount')
+            ax.set_title('Category Amount from Month %d to %d' % (month_start, month_end))
+            ax.set_xticks(ind + (width/2))
+            ax.set_xticklabels(category_name, rotation=90)
+            plt.tight_layout()
+            plt.show()
 
 def html_categories_for_year(bank_data, bank_categories, html_directory):
 	'''
@@ -387,7 +389,7 @@ if __name__ == "__main__":
         categories = read_categories(path_to_data + "categories.csv")
         bank_data_categories = assign_categories(bank_data, categories)
         print_unknown(bank_data, bank_data_categories)
-        print_category_total(bank_data, bank_data_categories, 1, 12, True)
+        print_category_total(bank_data, bank_data_categories, 2017, 1, 12, True)
         html_categories_for_year(bank_data, bank_data_categories,
             "/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/temp/")
     elif platform == "ChromeOS":
@@ -397,4 +399,6 @@ if __name__ == "__main__":
         categories = read_categories(path_to_data + "categories.csv")  
         bank_data_categories = assign_categories(bank_data, categories)
         print_unknown(bank_data, bank_data_categories)
-        #print_bank_data(bank_data, bank_data_categories, 6, 2018)
+        print_bank_data(bank_data, bank_data_categories, 6, 2018)
+        print_category_total(bank_data, bank_data_categories, 2018, 1, 6, True)
+        print_category_total(bank_data, bank_data_categories, 2017, 1, 6, True)
