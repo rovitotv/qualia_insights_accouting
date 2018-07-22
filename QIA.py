@@ -29,8 +29,8 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 '''
+
 import csv
 import matplotlib # this code imports matplotlib without OpenGL
 matplotlib.use("Agg")
@@ -75,6 +75,47 @@ def load_csv_data(path_to_data):
         if new_row['type'] == 'DEBIT':
             new_row['amount'] = new_row['amount'] * -1
         new_bank_data.append(new_row)
+
+    return new_bank_data
+
+def load_csv_data_multiple_years(path_to_data, start_year, end_year):
+    '''
+        provided the path to the data load the data but skip the
+        first line because it is garbage.  start_year and end_year are
+        provided to give user control over how many years of data required.
+    '''
+    bank_data = []
+    new_bank_data = []
+    for year_index in range(start_year, end_year+1):
+        path = path_to_data + "/" + str(year_index) + "/"
+        only_files = [f for f in listdir(path) if isfile(join(path, f))]
+        only_files.sort()
+        for file_index in range(0, len(only_files)):
+            csv_file_name = path + "/" + only_files[file_index]
+            print("processing %s" % csv_file_name)
+            with open(csv_file_name, "r") as csv_file:
+                csv_reader = csv.reader(csv_file)
+                next(csv_reader, None) # skip the first row
+                for row in csv_reader:
+                    bank_data.append(row)
+        # now we have read the data but the format is not correct, so below
+        # we reformat the types to the proper type
+        for index in range(0, len(bank_data)):
+            date_str = bank_data[index][0]
+            year = int(date_str.split("/")[0])
+            month = int(date_str.split("/")[1])
+            day = int(date_str.split("/")[2])
+            new_row = {
+                        'date': date(year, month, day),
+                        'amount': float(bank_data[index][1]),
+                        'description_1': bank_data[index][2],
+                        'description_2': bank_data[index][3],
+                        'description_3': bank_data[index][4],
+                        'type': bank_data[index][5],
+            }
+            if new_row['type'] == 'DEBIT':
+                new_row['amount'] = new_row['amount'] * -1
+            new_bank_data.append(new_row)
 
     return new_bank_data
 
@@ -136,7 +177,20 @@ def print_unknown(bank_data, bank_categories):
                 bank_data[i]['amount'],
                 bank_data[i]['description_1']))
             unknown_count += 1
-    print("unknown count/total: %d/%d" % (unknown_count, len(bank_data)))
+    print("unknown count/total count: %d/%d" % (unknown_count, len(bank_data)))
+    
+def print_bank_data(bank_data, bank_categories, month, year):
+    '''
+        print bank data and category for a given month and year.  This function
+        is useful to figure out how data is being catorgized.
+    '''
+    print("index\t\tdate\t\t\tamount\t\t\t\tcategory\t\t\t\tdescription")
+    for i in range(0, len(bank_data)):
+        if bank_data[i]['date'].month == month and bank_data[i]['date'].year == year:
+            print("%d\t\t\t%s\t$%5.2f\t\t\t\t%s\t\t\t\t%s" % (i, bank_data[i]['date'],
+                bank_data[i]['amount'],
+                bank_categories[i],
+                bank_data[i]['description_1']))
 
 def print_category_total(bank_data, bank_categories, month_start, month_end, make_plot = False):
 		'''
@@ -319,14 +373,15 @@ table, th, td {
 
 if __name__ == "__main__":
     print("Welcome to QI Accounting System verion 0.1 by Todd V. Rovito rovitotv@gmail.com")
-    # each year we have to change the year as needed now we are working on 2017
+    # each year we have to change the year(s) as needed now we are working on 2017
+    # we could use argparse and pass in a number of arguments but that is difficult to do
+    # with iPad
 
-    # for Pythonista
-    # to get directory below you have to go into stash and do "echo $HOME"
-    # maybe the path_to_data variable should be a command line argument? Then
-    # program would work in Pythonista if called from command line and Raspberry Pi?
-    platform_pythonista = False # set this variable to true if running on pythonista
-    if platform_pythonista:
+    platform = "ChromeOS" # set this variable to platform "Pythonista" or "ChromeOS"
+    if platform == "pythonista":
+        # For Pythonista to get directory below you have to go into stash and do "echo $HOME"
+        # maybe the path_to_data variable should be a command line argument? Then
+        # program would work in Pythonista if called from command line and Raspberry Pi?
         path_to_data = '/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/QIA/data/'
         bank_data = load_csv_data(path_to_data + "2017/")
         categories = read_categories(path_to_data + "categories.csv")
@@ -335,3 +390,11 @@ if __name__ == "__main__":
         print_category_total(bank_data, bank_data_categories, 1, 12, True)
         html_categories_for_year(bank_data, bank_data_categories,
             "/private/var/mobile/Containers/Shared/AppGroup/524B360A-7D33-4D59-AF5D-C869970F37F4/Pythonista3/Documents/temp/")
+    elif platform == "ChromeOS":
+        # you have to change the user name to the appropriate user in your Crouton environment
+        path_to_data = "/home/rovitotv/Downloads/QIA_data/"
+        bank_data = load_csv_data_multiple_years(path_to_data, 2017, 2018)
+        categories = read_categories(path_to_data + "categories.csv")  
+        bank_data_categories = assign_categories(bank_data, categories)
+        print_unknown(bank_data, bank_data_categories)
+        #print_bank_data(bank_data, bank_data_categories, 6, 2018)
