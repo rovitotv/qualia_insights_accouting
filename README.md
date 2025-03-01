@@ -1,3 +1,5 @@
+**This repo is archived and has been moved.  [new repo location](https://github.com/qualia-insights/QIA)**
+
 Qualia Insights Accounting System...why buy when you can write
 your own system? My lovely Wife owns and operates a mental health
 counselling business and I do her accounting.  For the last several
